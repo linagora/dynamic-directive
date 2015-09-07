@@ -1,0 +1,22 @@
+{
+  "name": "dynamic-directive",
+  "version": "1.0.0",
+  "authors": [
+    "Michael Bailly <mbailly@linagora.com>"
+  ],
+  "description": "Dynamic directives for angularjs",
+  "main": "dist/dynamic-directive.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "frontend/components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "chai": "~3.2.0",
+    "angular-mocks": "1.3.15",
+    "jquery": "~2.1.4"
+  }
+}
