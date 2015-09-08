@@ -17,6 +17,10 @@ module.exports = function(grunt) {
     },
     karma: {
       unit: {
+        configFile: './test/config/karma.dev.conf.js',
+        browsers: ['PhantomJS']
+      },
+      build: {
         configFile: './test/config/karma.conf.js',
         browsers: ['PhantomJS']
       }
@@ -70,7 +74,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-lint-pattern');
   grunt.loadNpmTasks('gruntify-eslint');
 
-  grunt.registerTask('default', ['babel']);
+  grunt.registerTask('default', ['linters', 'babel:dist', 'uglify:dist', 'test-frontend-min']);
+  grunt.registerTask('test', ['default']);
+  grunt.registerTask('test-frontend-min', 'Run the frontend tests', ['karma:build']);
   grunt.registerTask('test-frontend', 'Run the frontend tests', ['babel:dist', 'uglify:dist', 'karma:unit']);
   grunt.registerTask('linters', ['lint_pattern', 'jshint', 'eslint']);
 };
