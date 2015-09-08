@@ -3,10 +3,11 @@
 (function(angular) {
 
   var uniqueId = 0;
+  const DEFAULT_PRIORITY = 0;
 
-  class DynamicDirectiveInjection {
+  class DynamicDirective {
 
-    constructor(injectionFunction, name, attributes) {
+    constructor(injectionFunction, name, attributes, priority) {
       if ( !name ) {
         throw new Error('DynamicInjection: name argument should be a string');
       }
@@ -16,16 +17,31 @@
       }
       this.injectionFunction = injectionFunction;
 
-      this.attributes = this.attributes || []; // [{name: 'class', value: 'cool fun'}, ...]
+      this.attributes = attributes || []; // [{name: 'class', value: 'cool fun'}, ...]
+      this.priority = !isNaN(parseInt(priority, 10)) ? parseInt(priority, 10) : DEFAULT_PRIORITY;
 
       this._id = ++uniqueId;
     }
 
   }
 
-  angular.module('dynamicDirectives', [])
+  angular.module('op.dynamicDirective', [])
   .provider('dynamicDirectiveService', (function() {
     let injections = {};
+
+    function _dynamicDirectivesSort(a, b) {
+      var prio = b.priority - a.priority;
+      if( prio !== 0) {
+        return prio;
+      }
+      if (b.name < a.name) {
+        return -1;
+      } else if (b.name > a.name) {
+        return  1;
+      } else {
+        return 0;
+      }
+    }
 
     function _ensureInjectionsArray(anchorName) {
       injections[anchorName] = injections[anchorName] || [];
@@ -42,13 +58,19 @@
       injections[anchorName].push(da);
     }
 
+    function orderInjections(injections) {
+      injections.sort(_dynamicDirectivesSort);
+      return injections;
+    }
+
     return {
       addInjection: addInjection,
-      DynamicDirective: DynamicDirectiveInjection,
+      DynamicDirective: DynamicDirective,
       $get: ['$rootScope', function($rootScope) {
         return {
-          DynamicDirective: DynamicDirectiveInjection,
+          DynamicDirective: DynamicDirective,
           getInjections: getInjections,
+          sort: orderInjections,
           addInjection: function(anchorName, da) {
             addInjection(anchorName, da);
             $rootScope.$broadcast('dynamicDirectiveInjectionUpdated', anchorName, da);
@@ -57,9 +79,29 @@
       }]
     };
   })())
+
   .directive('dynamicDirective', ['$compile', 'dynamicDirectiveService', function($compile, dynamicDirectiveService) {
 
     const DYNAMIC_DIRECTIVE_ID = 'dynamic-directive-id';
+
+    function orderDirectives(element, dynamicDirectives) {
+      let orderedIds = dynamicDirectiveService.sort(dynamicDirectives).map((d) => d._id);
+      let domIds = element.children('[' + DYNAMIC_DIRECTIVE_ID + ']')
+                    .map((index, e) => parseInt(angular.element(e).attr(DYNAMIC_DIRECTIVE_ID), 10))
+                    .toArray();
+      // 99% of the time
+      if (orderedIds.join(',') === domIds.join(',')) {
+        return;
+      }
+
+      for(let i=0, len=orderedIds.length-2; i<=len; i++) {
+        let current = orderedIds[i], next = orderedIds[(i+1)],
+            $current = element.children('[' + DYNAMIC_DIRECTIVE_ID + '=' + current + ']');
+        if ( $current.next().attr(DYNAMIC_DIRECTIVE_ID) !== next ) {
+          element.children('[' + DYNAMIC_DIRECTIVE_ID + '=' + next + ']').insertAfter($current);
+        }
+      }
+    }
 
     function link(scope, element, attrs) {
       function appendDirective(dynamicDirective) {
@@ -68,16 +110,14 @@
         element.append(newElt);
       }
 
-      let buildHtmlFromInjectionData = function(dynamicDirective) {
+      function buildHtmlFromInjectionData(dynamicDirective) {
         let attributes = {};
         attributes[DYNAMIC_DIRECTIVE_ID] = dynamicDirective._id;
-
         dynamicDirective.attributes.forEach( (attribute) => attributes[attribute.name] = attribute.value );
-
         let e = angular.element('<' + dynamicDirective.name + '/>');
         e.attr(attributes);
         return e;
-      };
+      }
 
       function fixVisibility() {
         if (element.children().length) {
@@ -90,21 +130,25 @@
       let anchorName = attrs.dynamicDirective;
       element.hide();
 
-      let dynamicDirectives = dynamicDirectiveService.getInjections(anchorName, scope);
+      let dynamicDirectives = dynamicDirectiveService.sort(dynamicDirectiveService.getInjections(anchorName, scope));
 
       dynamicDirectives.forEach(appendDirective);
       fixVisibility();
 
-      scope.$on('dynamicDirectiveInjectionUpdated', function(name) {
+      scope.$on('dynamicDirectiveInjectionUpdated', function(evt, name) {
         if ( name !== anchorName ) {
           return ;
         }
-        let dynamicDirectives = dynamicDirectiveService.getInjections(anchorName, scope);
+        let dynamicDirectives = dynamicDirectiveService.sort(dynamicDirectiveService.getInjections(anchorName, scope));
         let dIds = {}, currentIds = {};
         dynamicDirectives.forEach( (d) => dIds[d._id] = d );
 
         element.children().each((index, elt) => {
           let $e = angular.element(elt), directiveId = $e.attr(DYNAMIC_DIRECTIVE_ID);
+          if ( !directiveId ) {
+            return ;
+          }
+
           if ( !dIds[directiveId] ) {
             $e.remove();
             return ;
@@ -112,11 +156,15 @@
           currentIds[directiveId] = true;
         });
 
-        Object.keys(dIds).forEach( (id) => {
-          if ( !currentIds[id] ) {
-            appendDirective(dIds[id]);
-          }
-        });
+        let dIdsCount = Object.keys(dIds).length, currentIdsCount = Object.keys(currentIds).length;
+        if (dIdsCount !== currentIdsCount) {
+          Object.keys(dIds).forEach( (id) => {
+            if ( !currentIds[id] ) {
+              appendDirective(dIds[id]);
+            }
+          });
+        }
+        orderDirectives(element, dynamicDirectives);
         fixVisibility();
       });
     }
@@ -125,6 +173,5 @@
       restrict: 'A',
       link: link
     };
-  }])
-  ;
+  }]);
 })(angular);
