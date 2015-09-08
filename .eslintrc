@@ -1,0 +1,16 @@
+{
+    "ecmaFeatures": {
+        "blockBindings": true,
+        "forOf": true,
+        "arrowFunctions": true,
+        "classes": true
+    },
+    "rules": {
+        "semi": 2
+    },
+    "env": {
+      "browser": true,
+      "mocha": true,
+      "es6": true
+    }
+}
