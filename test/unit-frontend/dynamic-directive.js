@@ -99,6 +99,15 @@ describe('The dynamic-directive angular module', function() {
         expect(ddSet2).to.deep.equal([dd3]);
         expect(ddSet3).to.deep.equal([dd1, dd4, dd5]);
       });
+
+      it('should allow condition function shortcut "true"', function() {
+        var dd1 = new this.service.DynamicDirective(true, 'dd1');
+        var dd2 = new this.service.DynamicDirective(true, 'dd2');
+        this.service.addInjection('ap4.4', dd1);
+        this.service.addInjection('ap4.4', dd2);
+        var ddSet1 = this.service.getInjections('ap4.4', {});
+        expect(ddSet1).to.deep.equal([dd1, dd2]);
+      });
     });
 
     describe('sort() method', function() {

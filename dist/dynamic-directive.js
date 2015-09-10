@@ -14,7 +14,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       throw new Error('DynamicInjection: name argument should be a string');
     }
     this.name = name;
-    if (!injectionFunction || !angular.isFunction(injectionFunction)) {
+
+    if (injectionFunction === true) {
+      injectionFunction = function () {
+        return true;
+      };
+    } else if (!injectionFunction || !angular.isFunction(injectionFunction)) {
       throw new Error('DynamicInjection: injectionFunction argument should be a function');
     }
     this.injectionFunction = injectionFunction;
