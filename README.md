@@ -209,3 +209,17 @@ angular.config(function(dynamicDirectiveServiceProvider) {
   dynamicDirectiveServiceProvider.addInjection(name, directive);
 });
 ```
+
+## Developers ?
+
+```bash
+npm install
+```
+
+to install the development envronment. During development, use :
+
+```bash
+grunt watch
+```
+
+to have the linters, transpilers and tests, launched automatically on file change. Clone, patch, pull request, give love.
