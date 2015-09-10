@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dynamic directive: Isolate scope</title>
+    <script src="../frontend/components/jquery/dist/jquery.min.js"></script>
+    <script src="../frontend/components/angular/angular.min.js"></script>
+    <script src="../dist/dynamic-directive.min.js"></script>
+    <script>
+      angular.module('example', ['op.dynamicDirective'])
+      .directive('displaycontact', function() {
+        return {
+          restrict: 'E',
+          scope: {
+            contact: '='
+          },
+          template: '<div>Contact name: {{contact.name}}</div>',
+          replace: true
+        };
+      })
+      .controller('contactController', function($scope) {
+        $scope.contacts = [
+          {
+            name: 'Bruce Willis',
+            email: 'bruce@usa.com'
+          },
+          {
+            name: 'Tony Stark',
+            email: 'tony@iron.com'
+          }
+        ];
+      })
+      .directive('addItem', ['dynamicDirectiveService', function(dynamicDirectiveService){
+        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'displaycontact', [{name: 'contact', value: 'contact'}]);
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            scope.add = function() {
+              dynamicDirectiveService.addInjection('contactDisplay', dd);
+              element.attr('disabled', 'disabled');
+            };
+          }
+        };
+      }]);
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></link>
+  </head>
+  <body ng-app='example'>
+
+    <h2>Isolate scope directive example</h2>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-6" ng-controller="contactController" >
+
+          <div ng-repeat="contact in contacts" dynamic-directive="contactDisplay">
+
+          </div>
+
+        </div>
+        <div class="col-xs-6">
+          <p>
+            <button add-item ng-click='add()'>Dynamically add the displaycontact directive</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

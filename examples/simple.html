@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dynamic directive: simple example</title>
+    <script src="../frontend/components/jquery/dist/jquery.min.js"></script>
+    <script src="../frontend/components/angular/angular.min.js"></script>
+    <script src="../dist/dynamic-directive.min.js"></script>
+    <script>
+      angular.module('example', ['op.dynamicDirective'])
+      .directive('avatar', function() {
+        return {
+          restrict: 'E',
+          template: '<div>Avatar</div>',
+          replace: true
+        };
+      })
+      .directive('addItem', ['dynamicDirectiveService', function(dynamicDirectiveService){
+        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'avatar');
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            scope.add = function() {
+              dynamicDirectiveService.addInjection('menu', dd);
+              element.attr('disabled', 'disabled');
+            };
+          }
+        };
+      }]);
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></link>
+  </head>
+  <body ng-app='example'>
+
+    <h2>A simple example</h2>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="nav nav-pills nav-stacked" dynamic-directive="menu">
+            <div>Profile</div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <p>
+            <button add-item ng-click='add()'>Dynamically add the avatar item</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
