@@ -54,9 +54,6 @@ module.exports = function(grunt) {
         src: ['<%= jshint.all.src %>']
       }
     },
-    eslint: {
-      src: ['<%= jshint.all.src %>']
-    },
     watch: {
       src: {
         files: ['src/**/*.js'],
@@ -78,11 +75,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lint-pattern');
-  grunt.loadNpmTasks('gruntify-eslint');
-
+  
   grunt.registerTask('default', ['linters', 'babel:dist', 'uglify:dist', 'test-frontend-min']);
   grunt.registerTask('test', ['default']);
   grunt.registerTask('test-frontend-min', 'Run the frontend tests', ['karma:build']);
   grunt.registerTask('test-frontend', 'Run the frontend tests', ['babel:dist', 'uglify:dist', 'karma:unit']);
-  grunt.registerTask('linters', ['lint_pattern', 'jshint', 'eslint']);
+  grunt.registerTask('linters', ['lint_pattern', 'jshint']);
 };
