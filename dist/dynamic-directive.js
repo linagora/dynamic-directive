@@ -33,6 +33,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   angular.module('op.dynamicDirective', []).provider('dynamicDirectiveService', (function () {
     var injections = {};
 
+    function _dynamicDirectivesSortByName(a, b, onEquality) {
+      if (b.name < a.name) {
+        return -1;
+      } else if (b.name > a.name) {
+        return 1;
+      } else {
+        return onEquality(a, b);
+      }
+    }
+
+    function _dynamicDirectivesSortByid(a, b) {
+      if (b._id < a._id) {
+        return -1;
+      } else if (b._id > a._id) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
     function _dynamicDirectivesSort(a, b) {
       var prio = b.priority - a.priority;
       if (prio !== 0) {
@@ -43,7 +63,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       } else if (b.name > a.name) {
         return 1;
       } else {
-        return 0;
+        return _dynamicDirectivesSortByName(a, b, _dynamicDirectivesSortByid);
       }
     }
 
