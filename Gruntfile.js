@@ -66,6 +66,12 @@ module.exports = function(grunt) {
         files: 'test/**/*.js',
         tasks: ['test-frontend']
       }
+    },
+    release: {
+      options: {
+        beforeBump: 'grunt default',
+        additionalFiles: ['bower.json']
+      }
     }
   });
   grunt.loadNpmTasks('grunt-karma');
