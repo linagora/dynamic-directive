@@ -223,3 +223,9 @@ grunt watch
 ```
 
 to have the linters, transpilers and tests, launched automatically on file change. Clone, patch, pull request, give love.
+
+### Release
+
+```bash
+grunt release
+```

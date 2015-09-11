@@ -19,6 +19,7 @@
     "grunt-contrib-watch": "0.6.1",
     "grunt-karma": "0.12.0",
     "grunt-lint-pattern": "0.1.4",
+    "grunt-release": "^0.13.0",
     "gruntify-eslint": "1.0.1",
     "karma": "0.13.9",
     "karma-babel-preprocessor": "5.2.2",
