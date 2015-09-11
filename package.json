@@ -1,6 +1,6 @@
 {
   "name": "dynamic-directive",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Dynamic directives for AngularJS",
   "main": "index.js",
   "scripts": {
