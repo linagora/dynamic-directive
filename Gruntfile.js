@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc'
       },
       all: {
-          src: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
+        src: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
       }
     },
     lint_pattern: {
@@ -51,6 +51,23 @@ module.exports = function(grunt) {
         ]
       },
       all: {
+        src: ['<%= jshint.all.src %>']
+      }
+    },
+    jscs: {
+      lint: {
+        options: {
+          config: '.jscsrc',
+          esnext: true
+        },
+        src: ['<%= jshint.all.src %>']
+      },
+      fix: {
+        options: {
+          config: '.jscsrc',
+          esnext: true,
+          fix: true
+        },
         src: ['<%= jshint.all.src %>']
       }
     },
@@ -75,10 +92,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-lint-pattern');
-  
+  grunt.loadNpmTasks('grunt-jscs');
+
   grunt.registerTask('default', ['linters', 'babel:dist', 'uglify:dist', 'test-frontend-min']);
   grunt.registerTask('test', ['default']);
   grunt.registerTask('test-frontend-min', 'Run the frontend tests', ['karma:build']);
   grunt.registerTask('test-frontend', 'Run the frontend tests', ['babel:dist', 'uglify:dist', 'karma:unit']);
-  grunt.registerTask('linters', ['lint_pattern', 'jshint']);
+  grunt.registerTask('linters', ['lint_pattern', 'jshint', 'jscs:lint']);
+  grunt.registerTask('fixstyle', ['jscs:fix']);
 };
