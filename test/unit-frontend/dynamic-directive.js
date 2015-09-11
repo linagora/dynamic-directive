@@ -103,7 +103,7 @@ describe('The dynamic-directive angular module', function() {
       });
       it('should call the directive injection method', function() {
         var falsefn = function() { return false; };
-        var gotCommunityInScope = function(scope) { return scope.community ? true: false; };
+        var gotCommunityInScope = function(scope) { return scope.community ? true : false; };
         var dd1 = new this.service.DynamicDirective(truefn, 'dd1');
         var dd2 = new this.service.DynamicDirective(falsefn, 'dd2');
         var dd3 = new this.service.DynamicDirective(truefn, 'dd3');
@@ -226,7 +226,7 @@ describe('The dynamic-directive angular module', function() {
       var dd1 = new this.service.DynamicDirective(truefn, 'dir1');
       var dd2 = new this.service.DynamicDirective(truefn, 'dir2');
       this.service.addInjection(ap, dd1);
-      var html = '<div dynamic-directive="'+ap+'"></div>';
+      var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       this.service.addInjection(ap, dd2);
@@ -243,7 +243,7 @@ describe('The dynamic-directive angular module', function() {
       var dd3 = new this.service.DynamicDirective(truefn, 'dir3', undefined, 10);
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
-      var html = '<div dynamic-directive="'+ap+'"></div>';
+      var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       this.service.addInjection(ap, dd3);
@@ -259,7 +259,7 @@ describe('The dynamic-directive angular module', function() {
       var dd3 = new this.service.DynamicDirective(truefn, 'dir3', undefined, 1);
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
-      var html = '<div dynamic-directive="'+ap+'"></div>';
+      var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       this.service.addInjection(ap, dd3);
@@ -275,7 +275,7 @@ describe('The dynamic-directive angular module', function() {
       var dd3 = new this.service.DynamicDirective(truefn, 'dir3', undefined, 5);
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
-      var html = '<div dynamic-directive="'+ap+'"></div>';
+      var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       this.service.addInjection(ap, dd3);
@@ -298,7 +298,7 @@ describe('The dynamic-directive angular module', function() {
       ];
       var dd1 = new this.service.DynamicDirective(truefn, 'dir1', attributes, 10);
       this.service.addInjection(ap, dd1);
-      var html = '<div dynamic-directive="'+ap+'"></div>';
+      var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       expect(elt.children()).to.have.length(1);
@@ -315,7 +315,7 @@ describe('The dynamic-directive angular module', function() {
       var dd3 = new this.service.DynamicDirective(truefn, 'dir3', undefined, 5);
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
-      var html = '<div dynamic-directive="'+ap+'"><div>I exist</div><span>Me too</span></div>';
+      var html = '<div dynamic-directive="' + ap + '"><div>I exist</div><span>Me too</span></div>';
       var elt = this.$compile(html)(this.scope);
       this.$rootScope.$digest();
       this.service.addInjection(ap, dd3);

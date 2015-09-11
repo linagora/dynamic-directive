@@ -8,14 +8,14 @@
   class DynamicDirective {
 
     constructor(injectionFunction, name, attributes, priority) {
-      if ( !name ) {
+      if (!name) {
         throw new Error('DynamicInjection: name argument should be a string');
       }
       this.name = name;
 
       if (injectionFunction === true) {
         injectionFunction = function() { return true; };
-      } else if ( !injectionFunction || !angular.isFunction(injectionFunction) ) {
+      } else if (!injectionFunction || !angular.isFunction(injectionFunction)) {
         throw new Error('DynamicInjection: injectionFunction argument should be a function');
       }
       this.injectionFunction = injectionFunction;
@@ -36,9 +36,9 @@
       if (b.name < a.name) {
         return -1;
       } else if (b.name > a.name) {
-        return  1;
+        return 1;
       } else {
-        return onEquality(a,b);
+        return onEquality(a, b);
       }
     }
 
@@ -46,7 +46,7 @@
       if (b._id < a._id) {
         return -1;
       } else if (b._id > a._id) {
-        return  1;
+        return 1;
       } else {
         return 0;
       }
@@ -54,13 +54,13 @@
 
     function _dynamicDirectivesSort(a, b) {
       var prio = b.priority - a.priority;
-      if( prio !== 0) {
+      if (prio !== 0) {
         return prio;
       }
       if (b.name < a.name) {
         return -1;
       } else if (b.name > a.name) {
-        return  1;
+        return 1;
       } else {
         return _dynamicDirectivesSortByName(a, b, _dynamicDirectivesSortByid);
       }
@@ -73,7 +73,7 @@
     function getInjections(anchorName, scope) {
       _ensureInjectionsArray(anchorName);
       let ia = injections[anchorName];
-      return ia.filter( (da) => da.injectionFunction(scope) );
+      return ia.filter((da) => da.injectionFunction(scope));
     }
 
     function addInjection(anchorName, da) {
@@ -117,10 +117,10 @@
         return;
       }
 
-      for(let i=0, len=orderedIds.length-2; i<=len; i++) {
-        let current = orderedIds[i], next = orderedIds[(i+1)],
+      for (let i = 0, len = orderedIds.length - 2; i <= len; i++) {
+        let current = orderedIds[i], next = orderedIds[(i + 1)],
             $current = element.children('[' + DYNAMIC_DIRECTIVE_ID + '=' + current + ']');
-        if ( $current.next().attr(DYNAMIC_DIRECTIVE_ID) !== next ) {
+        if ($current.next().attr(DYNAMIC_DIRECTIVE_ID) !== next) {
           element.children('[' + DYNAMIC_DIRECTIVE_ID + '=' + next + ']').insertAfter($current);
         }
       }
@@ -136,7 +136,7 @@
       function buildHtmlFromInjectionData(dynamicDirective) {
         let attributes = {};
         attributes[DYNAMIC_DIRECTIVE_ID] = dynamicDirective._id;
-        dynamicDirective.attributes.forEach( (attribute) => attributes[attribute.name] = attribute.value );
+        dynamicDirective.attributes.forEach((attribute) => attributes[attribute.name] = attribute.value);
         let e = angular.element('<' + dynamicDirective.name + '/>');
         e.attr(attributes);
         return e;
@@ -159,30 +159,30 @@
       fixVisibility();
 
       scope.$on('dynamicDirectiveInjectionUpdated', function(evt, name) {
-        if ( name !== anchorName ) {
-          return ;
+        if (name !== anchorName) {
+          return;
         }
         let dynamicDirectives = dynamicDirectiveService.sort(dynamicDirectiveService.getInjections(anchorName, scope));
         let dIds = {}, currentIds = {};
-        dynamicDirectives.forEach( (d) => dIds[d._id] = d );
+        dynamicDirectives.forEach((d) => dIds[d._id] = d);
 
         element.children().each((index, elt) => {
           let $e = angular.element(elt), directiveId = $e.attr(DYNAMIC_DIRECTIVE_ID);
-          if ( !directiveId ) {
-            return ;
+          if (!directiveId) {
+            return;
           }
 
-          if ( !dIds[directiveId] ) {
+          if (!dIds[directiveId]) {
             $e.remove();
-            return ;
+            return;
           }
           currentIds[directiveId] = true;
         });
 
         let dIdsCount = Object.keys(dIds).length, currentIdsCount = Object.keys(currentIds).length;
         if (dIdsCount !== currentIdsCount) {
-          Object.keys(dIds).forEach( (id) => {
-            if ( !currentIds[id] ) {
+          Object.keys(dIds).forEach((id) => {
+            if (!currentIds[id]) {
               appendDirective(dIds[id]);
             }
           });
