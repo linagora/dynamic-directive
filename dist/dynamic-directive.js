@@ -84,7 +84,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
       }]
     };
-  })()).directive('dynamicDirective', ['$compile', 'dynamicDirectiveService', function ($compile, dynamicDirectiveService) {
+  })()).value('DynamicDirective', DynamicDirective).directive('dynamicDirective', ['$compile', 'dynamicDirectiveService', function ($compile, dynamicDirectiveService) {
 
     var DYNAMIC_DIRECTIVE_ID = 'dynamic-directive-id';
 
