@@ -10,6 +10,28 @@ describe('The dynamic-directive angular module', function() {
     angular.mock.module('op.dynamicDirective');
   });
 
+  describe('DynamicDirective service', function() {
+    beforeEach(function() {
+      var self = this;
+      inject(function(DynamicDirective) {
+        self.DynamicDirective = DynamicDirective;
+      });
+    });
+
+    it('should be a function', function() {
+      expect(this.DynamicDirective).to.be.a('function');
+    });
+
+    it('should throw an error when instancied without new', function() {
+      var DynamicDirective = this.DynamicDirective;
+      function test() {
+        /* jshint newcap: false */
+        DynamicDirective(true, 'test');
+      }
+      expect(test).to.throw();
+    });
+  });
+
   describe('dynamicDirectiveService provider', function() {
     beforeEach(function() {
       var self = this;

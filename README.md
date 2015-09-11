@@ -127,6 +127,14 @@ function(scope) {
 
 The DynamicDirective contructor allows the boolean true as a shortcut for the filter function ```function() {return true;}```.
 
+The class is exposed as an angular service as well. You can inject it to your needs. Example:
+
+```javascript
+.factory('myService', ['DynamicDirective', function(DynamicDirective) {
+  var mydirective = new DynamicDirective(true, 'testing');
+}])
+```
+
 **angularDirectiveName**
 
 Required. Will be used as the tagName to create the HTML tag of your directive. Example:

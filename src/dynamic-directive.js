@@ -82,7 +82,7 @@
       }]
     };
   })())
-
+  .value('DynamicDirective', DynamicDirective)
   .directive('dynamicDirective', ['$compile', 'dynamicDirectiveService', function($compile, dynamicDirectiveService) {
 
     const DYNAMIC_DIRECTIVE_ID = 'dynamic-directive-id';
