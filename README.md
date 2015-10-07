@@ -199,6 +199,14 @@ Get the injection of anchor point "anchorName" with scope context "scope". This 
 var directivesToInject = dynamicDirectiveService.getInjection('anchorPointName', {});
 ```
 
+**resetInjections(anchorName)**
+
+Reset all injections of anchor point "anchorName". Example:
+
+```javascript
+dynamicDirectiveService.resetInjections('anchorPointName');
+```
+
 ### dynamicDirectiveService provider
 
 Allows third party modules to register the directives injection on angular configuration time.
