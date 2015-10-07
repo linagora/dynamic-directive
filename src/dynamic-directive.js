@@ -7,7 +7,7 @@
 
   class DynamicDirective {
 
-    constructor(injectionFunction, name, attributes, priority) {
+    constructor(injectionFunction, name, options) {
       if (!name) {
         throw new Error('DynamicInjection: name argument should be a string');
       }
@@ -19,9 +19,10 @@
         throw new Error('DynamicInjection: injectionFunction argument should be a function');
       }
       this.injectionFunction = injectionFunction;
-
-      this.attributes = attributes || []; // [{name: 'class', value: 'cool fun'}, ...]
-      this.priority = !isNaN(parseInt(priority, 10)) ? parseInt(priority, 10) : DEFAULT_PRIORITY;
+      options = options || {};
+      this.attributes = options.attributes || [];
+      this.scope = options.scope || undefined;
+      this.priority = !isNaN(parseInt(options.priority, 10)) ? parseInt(options.priority, 10) : DEFAULT_PRIORITY;
 
       this._id = ++uniqueId;
     }
@@ -137,7 +138,7 @@
     function link(scope, element, attrs) {
       function appendDirective(dynamicDirective) {
         let template = angular.element(buildHtmlFromInjectionData(dynamicDirective));
-        let newElt = $compile(template)(scope);
+        let newElt = $compile(template)(dynamicDirective.scope || scope);
         element.append(newElt);
       }
 

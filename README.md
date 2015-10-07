@@ -145,8 +145,10 @@ Required. Will be used as the tagName to create the HTML tag of your directive. 
 
 **attributes**
 
-Optional. Those attributes will be added to the HTML element of your injected directive.
-This is really useful when using isolate scopes. Example:
+Optional. If an array is passed, those attributes will be added to the HTML element of your injected directive.
+This is really useful when using isolate scopes.
+If an object is provided, the directive will be compiled against this object (scope). Then no attributes will be appended.
+Example:
 
 ```javascript
 [
@@ -159,6 +161,15 @@ This is really useful when using isolate scopes. Example:
     value: 'currentContact'
   }
 ]
+```
+
+Or:
+
+```javascript
+{
+  addressbook: 'ab'
+  contact: 'currentContact'
+}
 ```
 
 **priority**
