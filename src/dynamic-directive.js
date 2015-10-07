@@ -81,6 +81,10 @@
       injections[anchorName].push(da);
     }
 
+    function resetInjections(anchorName) {
+      injections[anchorName] = [];
+    }
+
     function orderInjections(injections) {
       injections.sort(_dynamicDirectivesSort);
       return injections;
@@ -97,6 +101,10 @@
           addInjection: function(anchorName, da) {
             addInjection(anchorName, da);
             $rootScope.$broadcast('dynamicDirectiveInjectionUpdated', anchorName, da);
+          },
+          resetInjections: function(anchorName) {
+            resetInjections(anchorName);
+            $rootScope.$broadcast('dynamicDirectiveInjectionUpdated', anchorName);
           }
         };
       }]
