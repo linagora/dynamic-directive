@@ -84,6 +84,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       injections[anchorName].push(da);
     }
 
+    function _resetInjections(anchorName) {
+      injections[anchorName] = [];
+    }
+
     function orderInjections(injections) {
       injections.sort(_dynamicDirectivesSort);
       return injections;
@@ -100,6 +104,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           addInjection: function addInjection(anchorName, da) {
             _addInjection(anchorName, da);
             $rootScope.$broadcast('dynamicDirectiveInjectionUpdated', anchorName, da);
+          },
+          resetInjections: function resetInjections(anchorName) {
+            _resetInjections(anchorName);
+            $rootScope.$broadcast('dynamicDirectiveInjectionUpdated', anchorName);
           }
         };
       }]

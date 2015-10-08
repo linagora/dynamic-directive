@@ -176,6 +176,28 @@ describe('The dynamic-directive angular module', function() {
         expect(ddSet1).to.deep.equal([dd2, dd3, dd5, dd4, dd1]);
       });
     });
+
+    describe('resetInjections method', function() {
+      before(function() {
+        var dd1 = new this.service.DynamicDirective(truefn, 'dd1');
+        var dd2 = new this.service.DynamicDirective(truefn, 'dd2');
+
+        this.service.addInjection('ap8', dd1);
+        this.service.addInjection('ap8', dd2);
+      });
+
+      it('should set injections to [] and broadcast dynamicDirectiveInjectionUpdated event', function(done) {
+        var scope = this.$rootScope.$new();
+        var self = this;
+        scope.$on('dynamicDirectiveInjectionUpdated', function() {
+          var ddSet1 = self.service.getInjections('ap8', {});
+          expect(ddSet1).to.deep.equal([]);
+          done();
+        });
+
+        this.service.resetInjections('ap8');
+      });
+    });
   });
 
   describe('dynamicDirective directive', function() {

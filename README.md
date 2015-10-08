@@ -90,19 +90,19 @@ Now, a third party module can inject entries to your user menu, by creating an A
 })
 
 // directive injection can happen during the config phase,
-// using the dynamicDirectiveServiceProvider
-.config(['dynamicDirectiveServiceProvider', function(dynamicDirectiveServiceProvider) {
+// using the dynamicDirectiveService provider
+.config(['dynamicDirectiveService', function(dynamicDirectiveService) {
   // here "avatar" is the name of the angular directive
-  var dd = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'avatar');
+  var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'avatar');
   // here userMenu is the anchor name you gave as the dynamic-directive attribute value
-  dynamicDirectiveServiceProvider.addInjection('userMenu', dd);
+  dynamicDirectiveService.addInjection('userMenu', dd);
 }])
 
 // directive injection can also happen during the run phase,
 // so anywhere in your code, using the dynamicDirectiveService service
 .run(['dynamicDirectiveService', function(dynamicDirectiveService) {
-  var dd = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'avatar');
-  dynamicDirectiveServiceProvider.addInjection('userMenu', dd);
+  var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'avatar');
+  dynamicDirectiveService.addInjection('userMenu', dd);
 }])
 ```
 ## API
@@ -199,7 +199,15 @@ Get the injection of anchor point "anchorName" with scope context "scope". This 
 var directivesToInject = dynamicDirectiveService.getInjection('anchorPointName', {});
 ```
 
-### dynamicDirectiveServiceProvider provider
+**resetInjections(anchorName)**
+
+Reset all injections of anchor point "anchorName". Example:
+
+```javascript
+dynamicDirectiveService.resetInjections('anchorPointName');
+```
+
+### dynamicDirectiveService provider
 
 Allows third party modules to register the directives injection on angular configuration time.
 
@@ -212,9 +220,9 @@ Give access to the DynamicDirective object.
 **addInjection(name, directive)**
 
 ```javascript
-angular.config(function(dynamicDirectiveServiceProvider) {
-  var dd = new dynamicDirectiveServiceProvider.DynamicDirective(function() { return true:}, 'thename');
-  dynamicDirectiveServiceProvider.addInjection(name, directive);
+angular.config(function(dynamicDirectiveService) {
+  var dd = new dynamicDirectiveService.DynamicDirective(function() { return true:}, 'thename');
+  dynamicDirectiveService.addInjection(name, directive);
 });
 ```
 
