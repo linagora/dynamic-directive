@@ -15,15 +15,17 @@
         };
       })
       .directive('addItem', ['$window', 'dynamicDirectiveService', function($window, dynamicDirectiveService){
-        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'avatar');
         return {
           restrict: 'A',
           link: function(scope, element, attrs) {
             scope.doSomething = function() {
               $window.alert('It works!');
             }
+            var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'avatar', {
+              scope: scope
+            });
             scope.add = function() {
-              dynamicDirectiveService.addInjection('menu', dd, scope);
+              dynamicDirectiveService.addInjection('menu', dd);
               element.attr('disabled', 'disabled');
             };
           }

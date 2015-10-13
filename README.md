@@ -109,7 +109,7 @@ Now, a third party module can inject entries to your user menu, by creating an A
 
 ### DynamicDirective class
 
-    new DynamicDirective(filterFunction, angularDirectiveName, [attributes, [priority]]);
+    new DynamicDirective(filterFunction, angularDirectiveName, [options]);
 
 **filterFunction**
 
@@ -143,11 +143,34 @@ Required. Will be used as the tagName to create the HTML tag of your directive. 
 "avatar"
 ```
 
-**attributes**
+**options**
 
-Optional. If an array is passed, those attributes will be added to the HTML element of your injected directive.
+Optional, it is an object like:
+
+```javascript
+{
+  attributes: [
+    {
+      name: 'addressbook',
+      value: 'ab'
+    },
+    {
+      name: 'contact',
+      value: 'currentContact'
+    }
+  ],
+  scope: {
+    add: function(something) {}
+  },
+  priority: 10
+}
+```
+
+Now let's detail available options.
+
+**attributes - **
+Those attributes will be added to the HTML element of your injected directive.
 This is really useful when using isolate scopes.
-If an object is provided, the directive will be compiled against this object (scope). Then no attributes will be appended.
 Example:
 
 ```javascript
@@ -163,7 +186,9 @@ Example:
 ]
 ```
 
-Or:
+**scope - **
+The directive will be compiled against this object (scope).
+Example:
 
 ```javascript
 {
@@ -172,9 +197,8 @@ Or:
 }
 ```
 
-**priority**
-
-Optional. In case you inject several directives in the same anchor, you can control the order of those directives in the DOM.
+**priority - **
+In case you inject several directives in the same anchor, you can control the order of those directives in the DOM.
 Default priority is 0. The highest priority will be put first in the DOM flow. Example:
 
 ```javascript

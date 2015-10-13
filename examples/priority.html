@@ -29,7 +29,7 @@
         };
       })
       .directive('addItem', ['dynamicDirectiveService', function(dynamicDirectiveService){
-        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'green', undefined, 0);
+        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'green', {priority: 0});
         return {
           restrict: 'A',
           link: function(scope, element, attrs) {
@@ -41,8 +41,8 @@
         };
       }])
       .config(['dynamicDirectiveServiceProvider', function(dynamicDirectiveServiceProvider) {
-        var dd = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'blue', undefined, -100);
-        var dd2 = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'red', undefined, 100);
+        var dd = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'blue', {priority: -100});
+        var dd2 = new dynamicDirectiveServiceProvider.DynamicDirective(function() {return true;}, 'red', {priority: 100});
         dynamicDirectiveServiceProvider.addInjection('colors', dd);
         dynamicDirectiveServiceProvider.addInjection('colors', dd2);
       }]);

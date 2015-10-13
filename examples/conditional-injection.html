@@ -17,11 +17,9 @@
           replace: true
         };
       })
-      .factory('session', function() {
+      .factory('user', function() {
         return {
-          user: {
-            name: 'Tony Stark'
-          }
+          name: 'Tony Stark'
         };
       })
       .controller('contactController', function($scope) {
@@ -36,15 +34,17 @@
           }
         ];
       })
-      .directive('addItem', ['dynamicDirectiveService', 'session', function(dynamicDirectiveService, session){
+      .directive('addItem', ['dynamicDirectiveService', 'user', function(dynamicDirectiveService, user){
         var condition = function(scope) {
-          return scope.contact.name !== session.user.name;
+          return scope.contact.name !== user.name;
         };
-        var dd = new dynamicDirectiveService.DynamicDirective(condition, 'displaycontact', [{name: 'contact', value: 'contact'}]);
+        var dd = new dynamicDirectiveService.DynamicDirective(condition, 'displaycontact', {
+          attributes: [{name: 'contact', value: 'contact'}]
+        });
         return {
           restrict: 'A',
           link: function(scope, element, attrs) {
-            scope.user = session.user;
+            scope.user = user;
             scope.add = function() {
               dynamicDirectiveService.addInjection('contactDisplay', dd);
               element.attr('disabled', 'disabled');
