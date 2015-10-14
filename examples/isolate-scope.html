@@ -30,7 +30,9 @@
         ];
       })
       .directive('addItem', ['dynamicDirectiveService', function(dynamicDirectiveService){
-        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'displaycontact', [{name: 'contact', value: 'contact'}]);
+        var dd = new dynamicDirectiveService.DynamicDirective(function() {return true;}, 'displaycontact', {
+          attributes: [{name: 'contact', value: 'contact'}]
+        });
         return {
           restrict: 'A',
           link: function(scope, element, attrs) {

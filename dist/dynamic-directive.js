@@ -7,7 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var uniqueId = 0;
   var DEFAULT_PRIORITY = 0;
 
-  var DynamicDirective = function DynamicDirective(injectionFunction, name, attributes, priority) {
+  var DynamicDirective = function DynamicDirective(injectionFunction, name, options) {
     _classCallCheck(this, DynamicDirective);
 
     if (!name) {
@@ -23,9 +23,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       throw new Error('DynamicInjection: injectionFunction argument should be a function');
     }
     this.injectionFunction = injectionFunction;
-
-    this.attributes = attributes || []; // [{name: 'class', value: 'cool fun'}, ...]
-    this.priority = !isNaN(parseInt(priority, 10)) ? parseInt(priority, 10) : DEFAULT_PRIORITY;
+    options = options || {};
+    this.attributes = options.attributes || [];
+    this.scope = options.scope || undefined;
+    this.priority = !isNaN(parseInt(options.priority, 10)) ? parseInt(options.priority, 10) : DEFAULT_PRIORITY;
 
     this._id = ++uniqueId;
   };
@@ -141,7 +142,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function link(scope, element, attrs) {
       function appendDirective(dynamicDirective) {
         var template = angular.element(buildHtmlFromInjectionData(dynamicDirective));
-        var newElt = $compile(template)(scope);
+        var newElt = $compile(template)(dynamicDirective.scope || scope);
         element.append(newElt);
       }
 
