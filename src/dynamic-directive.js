@@ -135,6 +135,19 @@
       }
     }
 
+    function hideElement(element) {
+      element.data('__dd_original_display', element.attr('display'));
+      element.attr('display', 'none');
+    }
+
+    function showElement(element) {
+      var originalDisplay = element.data('__dd_original_display');
+      if (!originalDisplay || originalDisplay === 'none') {
+        originalDisplay = 'block;';
+      }
+      element.attr('display', originalDisplay);
+    }
+
     function link(scope, element, attrs) {
       function appendDirective(dynamicDirective) {
         let template = angular.element(buildHtmlFromInjectionData(dynamicDirective));
@@ -153,14 +166,14 @@
 
       function fixVisibility() {
         if (element.children().length) {
-          element.show();
+          showElement(element);
         } else {
-          element.hide();
+          hideElement(element);
         }
       }
 
       let anchorName = attrs.dynamicDirective;
-      element.hide();
+      hideElement(element);
 
       let dynamicDirectives = dynamicDirectiveService.sort(dynamicDirectiveService.getInjections(anchorName, scope));
 
