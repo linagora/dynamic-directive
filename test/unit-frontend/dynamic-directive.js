@@ -33,21 +33,41 @@ describe('The dynamic-directive angular module', function() {
   });
 
   describe('dynamicDirectiveService provider', function() {
+    var DynamicDirective, service, provider;
+
     beforeEach(function() {
-      var self = this;
       angular.mock.module(function(dynamicDirectiveServiceProvider) {
-        self.provider = dynamicDirectiveServiceProvider;
+        provider = dynamicDirectiveServiceProvider;
       });
     });
-    beforeEach(inject());
+
+    beforeEach(inject(function(_DynamicDirective_, _dynamicDirectiveService_) {
+      DynamicDirective = _DynamicDirective_;
+      service = _dynamicDirectiveService_;
+    }));
 
     it('should have a addInjection() method', function() {
-      expect(this.provider).to.respondTo('addInjection');
+      expect(provider).to.respondTo('addInjection');
     });
+
     it('should expose the DynamicDirective object', function() {
-      expect(this.provider).to.have.property('DynamicDirective');
-      expect(this.provider.DynamicDirective).to.be.a('function');
+      expect(provider).to.have.property('DynamicDirective');
+      expect(provider.DynamicDirective).to.be.a('function');
     });
+
+    describe('The resetAllInjections method', function() {
+
+      it('should reset all injections', function() {
+        provider.addInjection('test-anchor-point', new DynamicDirective(true, 'test-directive'));
+        provider.addInjection('test-second-anchor-point', new DynamicDirective(true, 'test-second-directive'));
+        provider.resetAllInjections();
+
+        expect(service.getInjections('test-anchor-point', {})).to.have.length(0);
+        expect(service.getInjections('test-second-anchor-point', {})).to.have.length(0);
+      });
+
+    });
+
   });
 
   describe('dynamicDirectiveService', function() {
@@ -93,11 +113,11 @@ describe('The dynamic-directive angular module', function() {
       });
       it('should set attributes to a specific array, scope to specified one and priority to 100 if provided', function() {
         var dd1 = new this.service.DynamicDirective(truefn, 'dd1', {
-          scope: {aScope: 'aScope'},
+          scope: { aScope: 'aScope' },
           priority: 100,
           attributes: ['anArray']
         });
-        expect(dd1.scope).to.deep.equal({aScope: 'aScope'});
+        expect(dd1.scope).to.deep.equal({ aScope: 'aScope' });
         expect(dd1.attributes).to.deep.equal(['anArray']);
         expect(dd1.priority).to.equal(100);
       });
@@ -135,7 +155,7 @@ describe('The dynamic-directive angular module', function() {
         this.service.addInjection('ap4.1', dd5);
         var ddSet1 = this.service.getInjections('ap4.1', {});
         var ddSet2 = this.service.getInjections('ap4.2', {});
-        var ddSet3 = this.service.getInjections('ap4.1', {community: true});
+        var ddSet3 = this.service.getInjections('ap4.1', { community: true });
         expect(ddSet1).to.deep.equal([dd1, dd5]);
         expect(ddSet2).to.deep.equal([dd3]);
         expect(ddSet3).to.deep.equal([dd1, dd4, dd5]);
@@ -153,11 +173,11 @@ describe('The dynamic-directive angular module', function() {
 
     describe('sort() method', function() {
       it('should sort by priority', function() {
-        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', {priority: 1});
-        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', {priority: 2});
-        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', {priority: 0});
-        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', {priority: 5});
-        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', {priority: 4});
+        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', { priority: 1 });
+        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', { priority: 2 });
+        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', { priority: 0 });
+        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', { priority: 5 });
+        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', { priority: 4 });
         this.service.addInjection('ap5', dd1);
         this.service.addInjection('ap5', dd2);
         this.service.addInjection('ap5', dd3);
@@ -167,11 +187,11 @@ describe('The dynamic-directive angular module', function() {
         expect(ddSet1).to.deep.equal([dd4, dd5, dd2, dd1, dd3]);
       });
       it('should sort by name', function() {
-        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', {priority: 1});
-        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', {priority: 1});
-        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', {priority: 1});
-        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', {priority: 1});
-        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', {priority: 1});
+        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', { priority: 1 });
+        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', { priority: 1 });
+        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', { priority: 1 });
+        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', { priority: 1 });
+        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', { priority: 1 });
         this.service.addInjection('ap6', dd2);
         this.service.addInjection('ap6', dd1);
         this.service.addInjection('ap6', dd3);
@@ -181,11 +201,11 @@ describe('The dynamic-directive angular module', function() {
         expect(ddSet1).to.deep.equal([dd5, dd4, dd3, dd2, dd1]);
       });
       it('should sort by priority and then by name', function() {
-        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', {priority: 1});
-        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', {priority: 3});
-        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', {priority: 2});
-        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', {priority: 1});
-        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', {priority: 1});
+        var dd1 = new this.service.DynamicDirective(truefn, 'dd1', { priority: 1 });
+        var dd2 = new this.service.DynamicDirective(truefn, 'dd2', { priority: 3 });
+        var dd3 = new this.service.DynamicDirective(truefn, 'dd3', { priority: 2 });
+        var dd4 = new this.service.DynamicDirective(truefn, 'dd4', { priority: 1 });
+        var dd5 = new this.service.DynamicDirective(truefn, 'dd5', { priority: 1 });
         this.service.addInjection('ap7', dd2);
         this.service.addInjection('ap7', dd1);
         this.service.addInjection('ap7', dd3);
@@ -279,9 +299,9 @@ describe('The dynamic-directive angular module', function() {
 
     it('should respect the directive priority in the injection (higher next)', function() {
       var ap = 'aap3';
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {priority: 1});
-      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', {priority: 1});
-      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', {priority: 10});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { priority: 1 });
+      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', { priority: 1 });
+      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', { priority: 10 });
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
       var html = '<div dynamic-directive="' + ap + '"></div>';
@@ -295,9 +315,9 @@ describe('The dynamic-directive angular module', function() {
 
     it('should respect the directive priority in the injection (lower next)', function() {
       var ap = 'aap4';
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {priority: 10});
-      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', {priority: 10});
-      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', {priority: 1});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { priority: 10 });
+      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', { priority: 10 });
+      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', { priority: 1 });
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
       var html = '<div dynamic-directive="' + ap + '"></div>';
@@ -311,9 +331,9 @@ describe('The dynamic-directive angular module', function() {
 
     it('should respect the directive priority in the injection (middle next)', function() {
       var ap = 'aap5';
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {priority: 10});
-      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', {priority: 1});
-      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', {priority: 5});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { priority: 10 });
+      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', { priority: 1 });
+      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', { priority: 5 });
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
       var html = '<div dynamic-directive="' + ap + '"></div>';
@@ -337,7 +357,7 @@ describe('The dynamic-directive angular module', function() {
           value: 'contact'
         }
       ];
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {attributes: attributes, priority: 10});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { attributes: attributes, priority: 10 });
       this.service.addInjection(ap, dd1);
       var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);
@@ -351,9 +371,9 @@ describe('The dynamic-directive angular module', function() {
 
     it('should ignore the existing container contents', function() {
       var ap = 'aap7';
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {priority: 10});
-      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', {priority: 1});
-      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', {priority: 5});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { priority: 10 });
+      var dd2 = new this.service.DynamicDirective(truefn, 'dir2', { priority: 1 });
+      var dd3 = new this.service.DynamicDirective(truefn, 'dir3', { priority: 5 });
       this.service.addInjection(ap, dd1);
       this.service.addInjection(ap, dd2);
       var html = '<div dynamic-directive="' + ap + '"><div>I exist</div><span>Me too</span></div>';
@@ -369,7 +389,7 @@ describe('The dynamic-directive angular module', function() {
 
     it('should override the scope of the directive if provided', function(done) {
       var ap = 'aap8';
-      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', {priority: 10, scope:{doSomething: done}});
+      var dd1 = new this.service.DynamicDirective(truefn, 'dir1', { priority: 10, scope:{ doSomething: done } });
       this.service.addInjection(ap, dd1);
       var html = '<div dynamic-directive="' + ap + '"></div>';
       var elt = this.$compile(html)(this.scope);

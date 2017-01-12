@@ -94,8 +94,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return injections;
     }
 
+    function resetAllInjections() {
+      injections = {};
+    }
+
     return {
       addInjection: _addInjection,
+      resetAllInjections: resetAllInjections,
       DynamicDirective: DynamicDirective,
       $get: ['$rootScope', function ($rootScope) {
         return {

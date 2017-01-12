@@ -91,8 +91,13 @@
       return injections;
     }
 
+    function resetAllInjections() {
+      injections = {};
+    }
+
     return {
       addInjection: addInjection,
+      resetAllInjections: resetAllInjections,
       DynamicDirective: DynamicDirective,
       $get: ['$rootScope', function($rootScope) {
         return {
