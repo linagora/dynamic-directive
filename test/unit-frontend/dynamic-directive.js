@@ -33,21 +33,41 @@ describe('The dynamic-directive angular module', function() {
   });
 
   describe('dynamicDirectiveService provider', function() {
+    var DynamicDirective, service, provider;
+
     beforeEach(function() {
-      var self = this;
       angular.mock.module(function(dynamicDirectiveServiceProvider) {
-        self.provider = dynamicDirectiveServiceProvider;
+        provider = dynamicDirectiveServiceProvider;
       });
     });
-    beforeEach(inject());
+
+    beforeEach(inject(function(_DynamicDirective_, _dynamicDirectiveService_) {
+      DynamicDirective = _DynamicDirective_;
+      service = _dynamicDirectiveService_;
+    }));
 
     it('should have a addInjection() method', function() {
-      expect(this.provider).to.respondTo('addInjection');
+      expect(provider).to.respondTo('addInjection');
     });
+
     it('should expose the DynamicDirective object', function() {
-      expect(this.provider).to.have.property('DynamicDirective');
-      expect(this.provider.DynamicDirective).to.be.a('function');
+      expect(provider).to.have.property('DynamicDirective');
+      expect(provider.DynamicDirective).to.be.a('function');
     });
+
+    describe('The resetAllInjections method', function() {
+
+      it('should reset all injections', function() {
+        provider.addInjection('test-anchor-point', new DynamicDirective(true, 'test-directive'));
+        provider.addInjection('test-second-anchor-point', new DynamicDirective(true, 'test-second-directive'));
+        provider.resetAllInjections();
+
+        expect(service.getInjections('test-anchor-point', {})).to.have.length(0);
+        expect(service.getInjections('test-second-anchor-point', {})).to.have.length(0);
+      });
+
+    });
+
   });
 
   describe('dynamicDirectiveService', function() {
