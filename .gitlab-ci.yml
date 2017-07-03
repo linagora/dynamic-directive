@@ -1,0 +1,14 @@
+before_script:
+  - . ~/.nvm/nvm.sh && nvm use 6
+
+stages:
+  - test
+
+test:
+  stage: test
+  tags:
+    - shell
+    - online.net
+  script:
+   - npm i
+   - grunt
