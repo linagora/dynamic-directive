@@ -1,3 +1,5 @@
+![Archived](https://img.shields.io/badge/Current_Status-archived-blue?style=flat)
+
 # angular dynamic-directive
 
 > inject directives dynamically to pre-defined anchor points
